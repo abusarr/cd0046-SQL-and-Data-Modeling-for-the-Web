@@ -19,9 +19,9 @@ from forms import *
 app = Flask(__name__)
 #moment = Moment(app)
 app.config.from_object('config')
-db = SQLAlchemy(app)
+#db = SQLAlchemy(app)
 
-date = SQLAlchemy(app)
+#date = SQLAlchemy(app)
 
 # TODO: connect to a local postgresql database
 SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:Abu195@localhost:5432/fyyur_db'
