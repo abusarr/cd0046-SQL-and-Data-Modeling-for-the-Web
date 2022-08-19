@@ -5,13 +5,18 @@
 import json
 import dateutil.parser
 import babel
-from flask import Flask, render_template, request, Response, flash, redirect, url_for
+from flask import Flask, render_template, request, Response, flash, redirect, url_for, abort, jsonify
 #from flask_moment import Moment
-from flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy, db
 import logging
 from logging import Formatter, FileHandler
 from flask_wtf import Form
 from forms import *
+#from config import csrf
+from wtforms.csrf.core import CSRF
+from flask_migrate import Migrate
+import sys
+
 #----------------------------------------------------------------------------#
 # App Config.
 #----------------------------------------------------------------------------#
@@ -19,21 +24,22 @@ from forms import *
 app = Flask(__name__)
 #moment = Moment(app)
 app.config.from_object('config')
-#db = SQLAlchemy(app)
-
-#date = SQLAlchemy(app)
 
 # TODO: connect to a local postgresql database
 
 SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:Abu195@localhost:5432/fyyur_db'
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+
+
 #----------------------------------------------------------------------------#
 # Models.
 #----------------------------------------------------------------------------#
 
 class Venue(db.Model):
-    __tablename__ = 'Venue'
+    __tablename__ = 'venues'
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
@@ -45,9 +51,9 @@ class Venue(db.Model):
     facebook_link = db.Column(db.String(120))
 
     # TODO: implement any missing fields, as a database migration using Flask-Migrate
-
+db.create_all()
 class Artist(db.Model):
-    __tablename__ = 'Artist'
+    __tablename__ = 'artists'
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
@@ -59,7 +65,7 @@ class Artist(db.Model):
     facebook_link = db.Column(db.String(120))
 
     # TODO: implement any missing fields, as a database migration using Flask-Migrate
-
+db.create_all()
 # TODO Implement Show and Artist models, and complete all model relationships and properties, as a database migration.
 
 #----------------------------------------------------------------------------#
